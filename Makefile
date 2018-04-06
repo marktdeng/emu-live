@@ -14,7 +14,7 @@ out/Nat.dll: $(EMU_TARGETS) Nat/*.cs Nat/EmuUtil/*.cs Nat/Nat.sln Nat/Nat.csproj
 	cp Nat/bin/Kiwi/EmuUtil.dll out/
 
 out/%.dll: %.cs $(EMU_TARGETS)
-	time $(CSC) $(CSC_FLAGS) /target:library $(patsubst %, /r:%, $(EMU_TARGETS)) /r:$(KIWIDLL) -o $@ $<
+	time $(CSC) $(CSC_FLAGS) /target:library $(patsubst %, /r:%, $(EMU_TARGETS)) /r:$(KIWIDLL) -out:$@ $<
 
 out/Nat.v: out/Nat.dll $(EMU_TARGETS)
 	time $(KIWIC) $^ out/EmuUtil.dll -bevelab-default-pause-mode=hard -vnl-resets=synchronous -vnl-roundtrip=disable -res2-loadstore-port-count=0 -restructure2=disable -conerefine=disable -vnl $@

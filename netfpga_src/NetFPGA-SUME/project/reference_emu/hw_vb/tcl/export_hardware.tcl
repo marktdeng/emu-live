@@ -31,13 +31,22 @@
 
 set design [lindex $argv 0] 
 
+puts "\nOpening $design XPR project\n"
+
 open_project project/$design.xpr
 
-set bd_file [get_files -regexp -nocase {.*sub*.bd}] 
+#set bd_file [get_files -regexp -nocase {.*sub*.bd}] 
 
-open_bd_design $bd_file
+#open_bd_design $bd_file
+
+puts "\nOpening $design Implementation design\n"
+
 open_run impl_1
-export_hardware $bd_file [get_runs impl_1] -bitstream -dir ../sw/embedded/project
+#export_hardware $bd_file [get_runs impl_1] -bitstream -dir ../sw/embedded/project
+
+puts "\nCopying top.sysdef\n"
+
+file copy -force ./project/$design.runs/impl_1/top.sysdef ../sw/embedded/$design.hdf
 
 exit
 

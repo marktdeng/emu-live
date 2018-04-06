@@ -196,13 +196,13 @@ install_sume:
 		if [ "$(DESIGN_TYPE)" = "vb" ];  then \
 			echo "Create [Verilog Based design, $(DESIGN_TYPE)] $(SUME_FOLDER)/projects/reference_emu/hw"; \
 			echo "Create [Verilog Based design, $(DESIGN_TYPE)] $(SUME_FOLDER)/projects/reference_emu/sw"; \
-			cp -Rf $(SUME_FOLDER)/projects/reference_emu/hw_vb/* $(SUME_FOLDER)/projects/reference_emu/hw/; \
-			cp -Rf $(SUME_FOLDER)/projects/reference_emu/sw_vb/* $(SUME_FOLDER)/projects/reference_emu/sw/; \
+			cp -Rf $(SUME_FOLDER)/projects/reference_emu/hw_vb/ $(SUME_FOLDER)/projects/reference_emu/hw/; \
+			cp -Rf $(SUME_FOLDER)/projects/reference_emu/sw_vb/ $(SUME_FOLDER)/projects/reference_emu/sw/; \
 		else \
 			echo "Create [Blobk Design, $(DESIGN_TYPE)] $(SUME_FOLDER)/projects/reference_emu/hw"; \
 			echo "Create [Block Design, $(DESIGN_TYPE)] $(SUME_FOLDER)/projects/reference_emu/sw"; \
-			cp -Rf $(SUME_FOLDER)/projects/reference_emu/hw_bd/* $(SUME_FOLDER)/projects/reference_emu/hw; \
-			cp -Rf $(SUME_FOLDER)/projects/reference_emu/sw_bd/* $(SUME_FOLDER)/projects/reference_emu/sw; \
+			cp -Rf $(SUME_FOLDER)/projects/reference_emu/hw_bd/ $(SUME_FOLDER)/projects/reference_emu/hw; \
+			cp -Rf $(SUME_FOLDER)/projects/reference_emu/sw_bd/ $(SUME_FOLDER)/projects/reference_emu/sw; \
 		fi; \
 		if ! grep -q "emu_output_port_lookup_v1_0_0" $(SUME_FOLDER)/Makefile; then \
 			echo "Modify the recipe in $(SUME_FOLDER)/Makefile"; \
