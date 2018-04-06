@@ -9,16 +9,16 @@
 include Makefile.base
 
 $(Memory_TGT): $(Memory_SRC)
-	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) -o $@ $<
+	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) -out:$@ $<
 $(CAM_TGT): $(CAM_SRC) $(Memory_TGT) $(RXTX_TGT)
 	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) /r:$(Memory_TGT) /r:$(RXTX_TGT) -o $@ $<
 $(EMU_TGT): $(EMU_SRC)
-	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) -o $@ $<
+	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) -out:$@ $<
 $(NF_TGT): $(NF_SRC) $(EMU_TGT)
-	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) -o $@ $<
+	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) -out:$@ $<
 $(P_TGT): $(P_SRC) $(EMU_TGT)
-	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) /r:$(EMU_TGT) -o $@ $<
+	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) /r:$(EMU_TGT) -out:$@ $<
 $(Memcached_TGT): $(Memcached_SRC) $(P_TGT) $(Memory_TGT)
-	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) /r:$(P_TGT) /r:$(Memory_TGT) -o $@ $<
+	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) /r:$(P_TGT) /r:$(Memory_TGT) -out:$@ $<
 $(RXTX_TGT): $(RXTX_SRC) $(NF_TGT)
-	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) /r:$(NF_TGT) -o $@ $<
+	$(CSC) $(CSC_FLAGS) /target:library /r:$(KIWIDLL) /r:$(NF_TGT) -out:$@ $<
