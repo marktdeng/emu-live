@@ -18,7 +18,8 @@ CSC	?= gmcs
 
 ENABLE_THREADS	?= -compose=disable 
 HIDE_REGS	?= enable
-KIWI_FLAGS	?= -bevelab-default-pause-mode=hard -vnl-resets=synchronous -vnl-roundtrip=disable -res2-loadstore-port-count=0 -restructure2=disable -conerefine=$(HIDE_REGS) $(ENABLE_THREADS)
+#KIWI_FLAGS	?= -bevelab-default-pause-mode=hard -vnl-resets=synchronous -vnl-roundtrip=disable -res2-loadstore-port-count=0 -restructure2=disable -conerefine=$(HIDE_REGS) $(ENABLE_THREADS)
+KIWI_FLAGS ?= -vnl-resets=synchronous -vnl-roundtrip=disable -res2-loadstore-port-count=0 -restructure2=disable -kiwife-dynpoly=disable -conerefine=$(HIDE_REGS) $(ENABLE_THREADS)
 
 # Choose the desired type of design, block design (vb) or verilog based design (bd)
 DESIGN_TYPE	:= vb
@@ -142,7 +143,7 @@ emu_memcached_ascii_sume emu_memcached_binary_sume emu_reference_switch_sume emu
 	@echo "Update SUME IP cores library"
 	@make -C $(LIB_HW_emu_opl)/
 
-emu_reference_switch_lite_sume emu_reference_switch_lite_v2_sume emu_ICMP_echo_sume emu_DNS_server_sume emu_DNS_DBG_sume emu_TCP_pingRA_sume emu_TCP_pingSA_sume: $$(subst _sume,.v,$$@)
+emu_reference_switch_lite_sume emu_reference_switch_lite_v2_sume emu_reference_switch_lite_v2_library_sume emu_ICMP_echo_sume emu_DNS_server_sume emu_DNS_DBG_sume emu_TCP_pingRA_sume emu_TCP_pingSA_sume emu_packet_generator_sume: $$(subst _sume,.v,$$@)
 	@echo "\nKiwi Compilation finished : "$^" "
 #	Rename the module in the generated verilog file 'emu_*_*_sume' to 'Emu'
 	@sed -i 's/'.*module.*$(subst _sume,,$@)'/module Emu/' $< 
@@ -150,7 +151,7 @@ emu_reference_switch_lite_sume emu_reference_switch_lite_v2_sume emu_ICMP_echo_s
 	@echo "Copy $^\t\t-- "$(SUME_FOLDER)/lib/hw/std/cores/"emu_output_port_lookup_v1_0_0/hdl/Emu.v"
 	@cp -fp $< $(LIB_HW_emu_opl)/hdl/Emu.v
 #	Copy the correct opl to the lib folder of the NetFPGA
-	@if [ $@ = "emu_reference_switch_lite_v2_sume" ]; then \
+    @if [ $@ = "emu_reference_switch_lite_v2_library_sume" ] || [ $@ = "emu_reference_switch_lite_v2_sume" ] || [ $@ = "emu_packet_generator_sume" ]; then \
 		$(call copy_OPL_to_lib,"emu_output_port_lookup_AXIS256.v"); \
 		$(call set_clock_freq,200,$(DESIGN_TYPE)); \
 	else	\
@@ -172,11 +173,16 @@ Nat: Nat.v
 	cp -f ../netfpga_src/opl_wrapper/emu_output_port_lookup_AXIS64.v $(SUME_FOLDER)/lib/hw/std/cores/emu_output_port_lookup_v1_0_0/hdl/emu_output_port_lookup.v
 	make -C $(SUME_FOLDER)/lib/hw/std/cores/emu_output_port_lookup_v1_0_0/
 
-%.v: %.dll
-	$(KIWIC) $< $(KIWI_FLAGS) -vnl $@
+%.v: %.dll emu_library.dll
+    $(KIWIC) $< emu_library.dll $(KIWI_FLAGS) -vnl $@
+
 
 %.dll: %.cs
-	$(CSC) /target:library /r:$(KIWIDLL) $<
+    $(CSC) /target:library /r:$(KIWIDLL) /r:emu_library.dll $<
+
+
+emu_library.dll:
+    make -C emu_library
 
 
 install_sume:
